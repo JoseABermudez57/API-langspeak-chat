@@ -1,3 +1,4 @@
+import uvicorn
 from datetime import datetime
 from typing import List, Optional, Annotated
 
@@ -151,3 +152,12 @@ async def get_message(chat_uuid: str, db: db_dependency):
             } for message in messages
         ]
     )
+
+
+def main():
+    # uvicorn.run(app, host="0.0.0.0", port=8082)
+    uvicorn.run("main:app", host="localhost", port=8083, reload=True)
+
+
+if __name__ == "__main__":
+    main()
