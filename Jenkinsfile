@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'lang-speak-chats-service-prod-deploy'
-        NAME_PROJECT = 'lang-speak-chats-service'
+        NAME_PROJECT = 'API-langspeak-chat'
         PORT = '8083:8083'
         DOCKER_IMAGE_TAG = "${DOCKER_IMAGE}:latest"
         REMOTE_USER = "ubuntu"
         REMOTE_HOST = "44.199.36.163"
 //         EMAIL_ADDRESS = "213376@ids.upchiapas.edu.mx"
         SSH_CREDENTIALS_ID = "ssh-credentials-lang-speak-chats-prod-ec2"
-        REPO_URL = "https://github.com/AlanCruz10/${NAME_PROJECT}.git"
+        REPO_URL = "https://github.com/JoseABermudez57/${NAME_PROJECT}.git"
         REPO_DIR = "/home/ubuntu/${NAME_PROJECT}"
     }
 
