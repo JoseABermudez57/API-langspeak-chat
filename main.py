@@ -8,9 +8,91 @@ from sqlalchemy.orm import Session
 
 from database import SessionLocal
 from models import Chat, Message, TimeIA
+from transformers import pipeline
+import re
+from nltk.tokenize import word_tokenize
+import nltk
+from better_profanity import Profanity
+
+nltk.download('punkt', quiet=True)
+
+
+model_multilingual = "nlptown/bert-base-multilingual-uncased-sentiment"
+analytic_sentiments_multilingual = pipeline("sentiment-analysis", model=model_multilingual)
+
+profanity_list = ['puto', 'idiot', 'fuck', "Mamon", "Pinche", "verga", "huevon", "Chinga", "Pendejo", "Chingar", "Puta",
+                  "huevos", "Chachalaco", "Malacopa", "Chingaquedito", "Argüendero", "chingada", "Cascado", "asshole",
+                  "hooker", "Dumbass", "Motherfucker", "bitch", "perra", "Imbecil", "estupido", "maricon", "mierda",
+                  "maldito", "pene", "p3n3", "pito", "p1t0", "pit0", "p1to", "bastard", "bastardo", "putas", "putos",
+                  "dick", "d1ck", "fucking", "fuck1ng", "fock", "f0ck", "vtm", "ptm", "pt" "chtm", "ctm", "vrg"]
+
+profanity = Profanity()
+profanity.add_censor_words(profanity_list)
+
+
+class TextInput(BaseModel):
+    text: str
+
+
+class AnalysisResult(BaseModel):
+    original_text: str
+    filtered_text: str
+    sentiment: str
+    score: float
+
+
+def clean_text(text: str) -> str:
+    contractions = {
+        "I'm": "I am",
+        "you're": "you are",
+        "he's": "he is",
+        "she's": "she is",
+        "it's": "it is",
+        "we're": "we are",
+        "they're": "they are",
+        "I've": "I have",
+        "you've": "you have",
+        "we've": "we have",
+        "they've": "they have",
+        "isn't": "is not",
+        "aren't": "are not",
+        "wasn't": "was not",
+        "weren't": "were not",
+        "won't": "will not",
+        "wouldn't": "would not",
+        "don't": "do not",
+        "doesn't": "does not",
+        "didn't": "did not",
+        "can't": "cannot",
+        "couldn't": "could not",
+        "shouldn't": "should not",
+        "mightn't": "might not",
+        "mustn't": "must not"
+    }
+    text = text.lower()
+    for contraction, full_form in contractions.items():
+        text = text.replace(contraction.lower(), full_form.lower())
+    text = re.sub(r'[^a-zA-Záéíóúüñ\s]', '', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
+
+def analyze_and_filter(text: str) -> tuple:
+    text = clean_text(text)
+    result = analytic_sentiments_multilingual(text)
+
+    sentiment = result[0]['label']
+    score = result[0]['score']
+    # tokens = word_tokenize(text)
+
+    if sentiment in ['1 star', '2 stars'] or (sentiment in ['4 stars', '5 stars'] and score < 0.8):
+        filtered_text = profanity.censor(text=text, censor_char="*")
+    else:
+        filtered_text = text
+
+    return filtered_text, sentiment, score
 
 app = FastAPI()
-
 
 # DTOs
 class CreateChatRequest(BaseModel):
@@ -80,10 +162,18 @@ async def create_chat(request: CreateChatRequest, db: db_dependency):
 async def send_message(request: SendMessageRequest,
                        # audio: Optional[UploadFile] = File(None),
                        db: Session = Depends(get_db)):
-    # if audio:
-    #     # Logic to save audio as PDF in S3
-    #     pass
-    db_message = Message(**request.dict())
+    content = request.content
+    sentiment = None
+    score = None
+    #
+    if request.message_type == "TEXT":
+        content, sentiment, score = analyze_and_filter(content)
+
+    print(f"Sentiment: {sentiment}, Score: {score}")
+
+    db_message = Message(**request.dict(), content=content)
+    # db_message = Message(**request.dict())
+    # db_message.content = request.content
     db.add(db_message)
     db.commit()
     db.refresh(db_message)

@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenv
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Configuración de IDEs
+.vscode/
+.idea/
+
+# Archivos de configuración del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs y bases de datos locales
+*.log
+*.sqlite3
+
+# Archivos de configuración
+*.env
+
+# Directorios de pruebas
+.pytest_cache/
+.tox/
+
+# Archivos de cobertura de pruebas
+.coverage
+htmlcov/
+.coverage.*
+
+# Documentación generada
+/build/
+docs/_build/
+
+# Archivos de caché de herramientas de gestión de dependencias
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de paquetes distribuidos
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Archivos creados por setuptools
+.installed.cfg
+*.egg
+MANIFEST
+
+# Archivos y directorios específicos del sistema operativo
+*.swp
+*~
+
+# Archivos temporales creados por editores
+*.bak
+*.tmp
+*.old
+
+# Archivos de configuración de FastAPI
+*.pem
