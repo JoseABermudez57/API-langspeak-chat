@@ -1,12 +1,4 @@
-FROM python:3.11-slim
-
-RUN apt-get update && \
-    apt-get install -y \
-    pkg-config \
-    libmysqlclient-dev \
-    build-essential && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+FROM python:latest
 
 WORKDIR /app
 
