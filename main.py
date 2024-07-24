@@ -14,6 +14,7 @@ from nltk.tokenize import word_tokenize
 import nltk
 from better_profanity import Profanity
 
+
 nltk.download('punkt', quiet=True)
 
 
