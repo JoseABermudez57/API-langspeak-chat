@@ -1,16 +1,14 @@
 import json
 
-from src.application.dtos.responses.get_message_analyzed_response import GetMessageAnalyzedResponse
-from src.infrastructure.enums.queues_enums import Queue
+from src.infrastructure.enums.queues_enums import QueueEnum
 from src.infrastructure.configurations.rabbit_mq_config import setup_rabbitmq
 
 
 class MessageConsumer:
-    def __init__(self, get_message_analyzed_response):
-        self.get_message_analyzed_response = get_message_analyzed_response
-        self.queue_name = Queue.QUEUE_ANALYZE_MESSAGE_RESPONSE.value["queue"]
-        self.exchange_name = Queue.QUEUE_ANALYZE_MESSAGE_RESPONSE.value["exchange"]
-        self.routing_key = Queue.QUEUE_ANALYZE_MESSAGE_RESPONSE.value["routing_key"]
+    def __init__(self):
+        self.queue_name = QueueEnum.QUEUE_ANALYZE_MESSAGE_RESPONSE.value["queue"]
+        self.exchange_name = QueueEnum.QUEUE_ANALYZE_MESSAGE_RESPONSE.value["exchange"]
+        self.routing_key = QueueEnum.QUEUE_ANALYZE_MESSAGE_RESPONSE.value["routing_key"]
 
     def execute(self):
         try:
@@ -24,4 +22,3 @@ class MessageConsumer:
         request = json.loads(body)
         content = request['data']['content']
         print(content)
-        self.get_message_analyzed_response.set_content(content)

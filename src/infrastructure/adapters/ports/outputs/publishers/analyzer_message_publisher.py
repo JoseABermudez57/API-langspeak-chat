@@ -1,13 +1,13 @@
 from src.infrastructure.configurations.rabbit_mq_config import setup_rabbitmq
-from src.infrastructure.enums.queues_enums import Queue
+from src.infrastructure.enums.queues_enums import QueueEnum
 
 
 class MessagePublisher:
 
     def __init__(self, ):
-        self.queue_name = Queue.QUEUE_ANALYZE_MESSAGE_REQUEST.value["queue"]
-        self.exchange_name = Queue.QUEUE_ANALYZE_MESSAGE_REQUEST.value["exchange"]
-        self.routing_key = Queue.QUEUE_ANALYZE_MESSAGE_REQUEST.value["routing_key"]
+        self.queue_name = QueueEnum.QUEUE_ANALYZED_MESSAGE_REQUEST.value["queue"]
+        self.exchange_name = QueueEnum.QUEUE_ANALYZED_MESSAGE_REQUEST.value["exchange"]
+        self.routing_key = QueueEnum.QUEUE_ANALYZED_MESSAGE_REQUEST.value["routing_key"]
 
     def execute(self, message_analyzed):
         try:

@@ -27,8 +27,8 @@ class ChatService(IChatServicePortInput):
         execute = self.sendTimeChatUseCase.execute(request)
         return execute
 
-    def get_graphic(self, message: str):
-        execute = self.getGraphicUseCase.execute(message)
+    def get_graphic(self, user_uuid: str):
+        execute = self.getGraphicUseCase.execute(user_uuid)
         return execute
 
     def get_user_chats(self, user_uuid: str):

@@ -33,4 +33,4 @@ class TimeIA(Base):
     id = Column(String(36), primary_key=True, default=uuid.uuid4)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    chat_id = Column(String(255))
+    user_id = Column(String(255))

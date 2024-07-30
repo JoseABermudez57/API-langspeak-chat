@@ -1,6 +1,6 @@
 class GetMessageAnalyzedResponse:
     def __init__(self):
-        self.content = None
+        self.content = {}
 
     def set_content(self, content):
         self.content = content
