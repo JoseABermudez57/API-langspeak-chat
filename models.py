@@ -1,6 +1,7 @@
 import uuid
 
 from sqlalchemy import Column, String, Text, DateTime, ForeignKey, UUID
+
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -9,7 +10,7 @@ from database import Base
 # Models
 class Chat(Base):
     __tablename__ = "chats"
-    id = Column(String(255), primary_key=True, index=True)
+    id = Column(String(36), primary_key=True, default=uuid.uuid4)
     user_id = Column(String(255))
     friend_id = Column(String(255))
     chat_type = Column(String(20))
@@ -18,8 +19,8 @@ class Chat(Base):
 
 class Message(Base):
     __tablename__ = "messages"
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    content = Column(Text, nullable=True)
+    id = Column(String(36), primary_key=True, default=uuid.uuid4)
+    content = Column(String(10000))
     message_type = Column(String(20))
     sender_id = Column(String(255))
     recipient_id = Column(String(255))
@@ -29,7 +30,7 @@ class Message(Base):
 
 class TimeIA(Base):
     __tablename__ = "time_ia"
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=uuid.uuid4)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    user_id = Column(String(255))
+    chat_id = Column(String(255))
